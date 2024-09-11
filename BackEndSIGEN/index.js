@@ -1,11 +1,16 @@
 import express from "express";
-import { PORT } from "./config";
+import { PORT } from "./config.js";
 
 const app = express();
 
 app.get("/", (req, res) => {
-  res.send("Hello World...");
+  res.send("Hello World Alex...");
 });
+
+app.post('/login', (req, res) => {})
+app.post("/register", (req, res) => {});
+app.post("/loguot", (req, res) => {});
+app.post("/protected", (req, res) => {});
 
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
