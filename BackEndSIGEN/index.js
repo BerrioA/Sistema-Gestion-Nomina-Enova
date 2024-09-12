@@ -1,10 +1,17 @@
+import db from "./config/Database.js";
 import express from "express";
 import cors from "cors";
 import session from "express-session";
 import dotenv from "dotenv";
+import AdminRoute from "./routes/AdminRoute.js";
+import EmpleadoRoute from "./routes/EmpleadoRoute.js";
 dotenv.config();
 
 const app = express();
+
+async () => {
+  await db.sync();
+};
 
 app.use(
   session({
@@ -14,6 +21,9 @@ app.use(
     cookie: { secure: "auto" },
   })
 );
+
+app.use(AdminRoute);
+app.use(EmpleadoRoute);
 
 //MIDDLEWARES
 //Funcion encargada de recibir las solicitudes junto con las cookies al incluir las credenciales.

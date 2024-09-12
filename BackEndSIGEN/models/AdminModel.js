@@ -5,7 +5,7 @@ import { name } from "tar/types";
 const { DataTypes } = Sequelize;
 
 const Administradores = db.define(
-  "administradores",
+  "administrador",
   {
     uuid: {
       type: DataTypes.STRING,
@@ -32,6 +32,13 @@ const Administradores = db.define(
       },
     },
     password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    role: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
