@@ -1,17 +1,31 @@
 import express from "express";
-import { PORT } from "./config.js";
+import cors from "cors";
+import session from "express-session";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello World Alex...");
-});
+app.use(
+  session({
+    secret: process.env.SESS_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: "auto" },
+  })
+);
 
-app.post('/login', (req, res) => {})
-app.post("/register", (req, res) => {});
-app.post("/loguot", (req, res) => {});
-app.post("/protected", (req, res) => {});
+//MIDDLEWARES
+//Funcion encargada de recibir las solicitudes junto con las cookies al incluir las credenciales.
+app.use(
+  cors({
+    credentials: true,
+    //Dominios con accedo a la API
+    origin: ["http://localhost:3000"],
+  })
+);
+app.use(express.json());
 
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en el puerto ${PORT}`);
+app.listen(process.env.APP_PORT, () => {
+  console.log(`Servidor corriendo con exito...!`);
 });
