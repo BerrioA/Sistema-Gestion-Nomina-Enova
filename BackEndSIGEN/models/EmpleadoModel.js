@@ -78,8 +78,7 @@ const Empleados = db.define(
         isNumeric: true,
       },
     },
-
-    empleadoId: {
+    administradorId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -93,6 +92,6 @@ const Empleados = db.define(
 );
 
 Administradores.hasMany(Empleados);
-Empleados.belongsTo(Administradores, { foreignKey: "empleadoId" });
+Empleados.belongsTo(Administradores, { foreignKey: "administradorId" });
 
 export default Empleados;

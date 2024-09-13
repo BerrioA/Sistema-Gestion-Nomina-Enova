@@ -2,7 +2,7 @@ import express from "express";
 
 import {
   getEmpleados,
-  getEmpleadosById,
+  getEmpleadoById,
   createEmpleado,
   updateEmpleado,
   deleteEmpleado,
@@ -10,10 +10,10 @@ import {
 
 const router = express.Router();
 
-router.get("/empleado", getEmpleados);
-router.get("/empleado/:id", getEmpleadosById);
-router.post("/empleado", createEmpleado);
-router.patch("/empleado/:id", updateEmpleado);
-router.delete("/empleado/:id", deleteEmpleado);
+router.get("/empleados", getEmpleados);
+router.get("/empleados/:id", getEmpleadoById);
+router.post("/empleados", createEmpleado);
+router.patch("/empleados/:id", updateEmpleado);
+router.delete("/empleados/:id", deleteEmpleado);
 
 export default router;
