@@ -4,8 +4,8 @@ Content-Type: application/json
 
 
 {
-    "name": "A Berrio",
-    "email": "Alejandro@developer.com",
+    "name": "Digna J",
+    "email": "Digna@developer.com",
     "password": "Danda1214",
     "confPassword": "Danda1214",
     "role": "Administrador"

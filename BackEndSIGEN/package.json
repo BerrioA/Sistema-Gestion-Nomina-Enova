@@ -4,11 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-<<<<<<< HEAD
-    "dev": "nodemon index.js",
-=======
     "dev": "nodemon /index.js",
->>>>>>> 5450ca75252a59cf90790225be2f69609a1c8502
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
