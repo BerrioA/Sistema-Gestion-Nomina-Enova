@@ -1,11 +1,10 @@
-import { Sequelize, UUID } from "sequelize";
+import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
-import { name } from "tar/types";
 
 const { DataTypes } = Sequelize;
 
 const Administradores = db.define(
-  "administrador",
+  "administradores",
   {
     uuid: {
       type: DataTypes.STRING,

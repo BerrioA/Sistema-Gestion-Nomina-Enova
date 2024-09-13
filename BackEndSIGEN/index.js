@@ -1,4 +1,4 @@
-import db from "./config/Database.js";
+// import db from "./config/Database.js";
 import express from "express";
 import cors from "cors";
 import session from "express-session";
@@ -9,9 +9,9 @@ dotenv.config();
 
 const app = express();
 
-async () => {
-  await db.sync();
-};
+// (async () => {
+//   await db.sync();
+// })();
 
 app.use(
   session({
@@ -21,9 +21,6 @@ app.use(
     cookie: { secure: "auto" },
   })
 );
-
-app.use(AdminRoute);
-app.use(EmpleadoRoute);
 
 //MIDDLEWARES
 //Funcion encargada de recibir las solicitudes junto con las cookies al incluir las credenciales.
@@ -35,6 +32,8 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(AdminRoute);
+app.use(EmpleadoRoute);
 
 app.listen(process.env.APP_PORT, () => {
   console.log(`Servidor corriendo con exito...!`);

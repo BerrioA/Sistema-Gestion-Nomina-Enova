@@ -1,4 +1,4 @@
-import { Sequelize, UUID } from "sequelize";
+import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
 import Administradores from "./AdminModel.js";
 
@@ -20,7 +20,6 @@ const Empleados = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
-        isNumeric: true,
       },
     },
     charge: {
@@ -28,7 +27,6 @@ const Empleados = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
-        isNumeric: true,
       },
     },
     name: {
@@ -44,6 +42,7 @@ const Empleados = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: [3, 100],
       },
     },
     nit: {
@@ -51,7 +50,6 @@ const Empleados = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
-        isNumeric: true,
       },
     },
     bankname: {
@@ -66,7 +64,10 @@ const Empleados = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
-        isNumeric: true,
+        is: {
+          args: /^[0-9]+(-[0-9]+)?$/,
+          msg: "El Número de cuenta debe ser numérico y solo puede ser separado por guiones.",
+        },
       },
     },
     monthfees: {

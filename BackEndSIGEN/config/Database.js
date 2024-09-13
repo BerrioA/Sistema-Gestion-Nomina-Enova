@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 
-const db = new Sequelize("gestion_nomina_enova", "root", "root", {
+const db = new Sequelize("db_enova", "root", "", {
   host: "localhost",
   dialect: "mysql",
 });
