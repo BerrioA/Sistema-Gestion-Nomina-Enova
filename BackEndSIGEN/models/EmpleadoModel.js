@@ -64,10 +64,6 @@ const Empleados = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
-        is: {
-          args: /^[0-9]+(-[0-9]+)?$/,
-          msg: "El Número de cuenta debe ser numérico y solo puede ser separado por guiones.",
-        },
       },
     },
     monthfees: {

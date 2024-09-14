@@ -39,7 +39,7 @@ export const getEmpleados = async (req, res) => {
           "monthfees",
         ],
         where: {
-          empleadoId: req.empleadoId,
+          administradorId: req.administradorId,
         },
         include: [
           {
@@ -106,7 +106,7 @@ export const getEmpleadoById = async (req, res) => {
         where: {
           [Op.and]: [
             { id: empleado.id },
-            { administradoreId: req.administradoreId },
+            { administradorId: req.administradorId },
           ],
         },
         include: [
@@ -124,7 +124,7 @@ export const getEmpleadoById = async (req, res) => {
 };
 
 export const createEmpleado = async (req, res) => {
-  const { site, charge, name, nit, bankname, contnumber, monthfees } = req.body;
+  const { site, charge, name, nit, lastname, bankname, contnumber, monthfees } = req.body;
   try {
     await Empleado.create({
       site: site,
@@ -135,7 +135,7 @@ export const createEmpleado = async (req, res) => {
       bankname: bankname,
       contnumber: contnumber,
       monthfees: monthfees,
-      administradoreId: req.administradoreId,
+      administradorId: req.administradorId,
     });
     res.status(202).json({ msg: "Empleado Registrado con Exito!" });
   } catch (error) {
@@ -154,7 +154,7 @@ export const updateEmpleado = async (req, res) => {
       return res
         .status(404)
         .json({ msg: "Datos del empleados no encontrados." });
-    const { site, charge, name, nit, bankname, contnumber, monthfees } =
+    const { site, charge, name, lastname, nit, bankname, contnumber, monthfees } =
       req.body;
     if (req.role === "Administrador") {
       await Empleado.update(
@@ -162,6 +162,7 @@ export const updateEmpleado = async (req, res) => {
           site,
           charge,
           name,
+          lastname,
           nit,
           bankname,
           contnumber,
@@ -174,13 +175,14 @@ export const updateEmpleado = async (req, res) => {
         }
       );
     } else {
-      if (req.administradoreId !== empleado.administradoreId)
+      if (req.administradorId !== empleado.administradorId)
         return res.status(403).json({ msg: "Acceso restringido!" });
       await Empleado.update(
         {
           site,
           charge,
           name,
+          lastname,
           nit,
           bankname,
           contnumber,
@@ -190,7 +192,7 @@ export const updateEmpleado = async (req, res) => {
           where: {
             [Op.and]: [
               { id: empleado.id },
-              { administradoreId: req.administradoreId },
+              { administradorId: req.administradorId },
             ],
           },
         }
@@ -210,8 +212,7 @@ export const deleteEmpleado = async (req, res) => {
       },
     });
     if (!empleado) return res.status(404).json({ msg: "Datos no encontrados" });
-    const { site, charge, name, nit, bankname, contnumber, monthfees } =
-      req.body;
+    const { site, charge, name, lastname, nit, bankname, contnumber, monthfees } = req.body;
     if (req.role === "Administrador") {
       await Empleado.destroy({
         where: {
@@ -219,13 +220,13 @@ export const deleteEmpleado = async (req, res) => {
         },
       });
     } else {
-      if (req.administradoreId !== empleado.administradoreId)
+      if (req.administradorId !== empleado.administradorId)
         return res.status(403).json({
           msg: "Acceso restringido.",
         });
       await Empleado.destroy({
         where: {
-          [Op.and]: [{ id: empleado.id }, { empleadoId: req.administradoreId }],
+          [Op.and]: [{ id: empleado.id }, { empleadoId: req.administradorId }],
         },
       });
     }
