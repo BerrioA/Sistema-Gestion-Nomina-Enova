@@ -7,13 +7,13 @@ import {
   updateAdministrador,
   deleteAdministrador,
 } from "../controllers/Administradores.js";
-
+import { verifyAdministrador, administradorOnly } from "../middleware/AutenticacionAdministrador.js";
 const router = express.Router();
 
-router.get("/administradores", getAdministradores);
-router.get("/administradores/:id", getAdministradorById);
-router.post("/administradores", createAdministrador);
-router.patch("/administradores/:id", updateAdministrador);
-router.delete("/administradores/:id", deleteAdministrador);
+router.get("/administradores", verifyAdministrador, administradorOnly, getAdministradores);
+router.get("/administradores/:id", verifyAdministrador, administradorOnly, getAdministradorById);
+router.post("/administradores", verifyAdministrador, administradorOnly, createAdministrador);
+router.patch("/administradores/:id", verifyAdministrador, administradorOnly, updateAdministrador);
+router.delete("/administradores/:id", verifyAdministrador, administradorOnly, deleteAdministrador);
 
 export default router;

@@ -70,7 +70,7 @@ export const updateAdministrador = async (req, res) => {
   const { name, email, password, confPassword, role } = req.body;
   let hashPassword;
 
-   if (!password || password === "") {
+  if (!password || password === "") {
     hashPassword = administrador.password;
   } else {
     if (password !== confPassword) {

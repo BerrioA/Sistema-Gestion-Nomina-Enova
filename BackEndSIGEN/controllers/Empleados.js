@@ -124,7 +124,8 @@ export const getEmpleadoById = async (req, res) => {
 };
 
 export const createEmpleado = async (req, res) => {
-  const { site, charge, name, nit, lastname, bankname, contnumber, monthfees } = req.body;
+  const { site, charge, name, nit, lastname, bankname, contnumber, monthfees } =
+    req.body;
   try {
     await Empleado.create({
       site: site,
@@ -154,8 +155,16 @@ export const updateEmpleado = async (req, res) => {
       return res
         .status(404)
         .json({ msg: "Datos del empleados no encontrados." });
-    const { site, charge, name, lastname, nit, bankname, contnumber, monthfees } =
-      req.body;
+    const {
+      site,
+      charge,
+      name,
+      lastname,
+      nit,
+      bankname,
+      contnumber,
+      monthfees,
+    } = req.body;
     if (req.role === "Administrador") {
       await Empleado.update(
         {
@@ -212,7 +221,16 @@ export const deleteEmpleado = async (req, res) => {
       },
     });
     if (!empleado) return res.status(404).json({ msg: "Datos no encontrados" });
-    const { site, charge, name, lastname, nit, bankname, contnumber, monthfees } = req.body;
+    const {
+      site,
+      charge,
+      name,
+      lastname,
+      nit,
+      bankname,
+      contnumber,
+      monthfees,
+    } = req.body;
     if (req.role === "Administrador") {
       await Empleado.destroy({
         where: {
@@ -222,7 +240,7 @@ export const deleteEmpleado = async (req, res) => {
     } else {
       if (req.administradorId !== empleado.administradorId)
         return res.status(403).json({
-          msg: "Acceso restringido.",
+          msg: "Acceso denegado, no tienes permisos para realizar esta acción.",
         });
       await Empleado.destroy({
         where: {
