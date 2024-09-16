@@ -48,5 +48,7 @@ app.use(AutenticacionRoute);
 // store.sync();
 
 app.listen(process.env.APP_PORT, () => {
-  console.log(`Servidor corriendo con exito...!`);
+  console.log(
+    `Servidor corriendo con exito en el puerto ${process.env.APP_PORT}!`
+  );
 });
