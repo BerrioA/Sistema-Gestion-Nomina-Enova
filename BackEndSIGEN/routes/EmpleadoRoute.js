@@ -7,13 +7,30 @@ import {
   updateEmpleado,
   deleteEmpleado,
 } from "../controllers/Empleados.js";
-import { verifyAdministrador } from "../middleware/AutenticacionAdministrador.js";
+import {
+  coordinadorOnly,
+  verifyCoordinador,
+} from "../middleware/AutenticacionCoordinador.js";
 const router = express.Router();
 
-router.get("/empleados", verifyAdministrador, getEmpleados);
-router.get("/empleados/:id", verifyAdministrador, getEmpleadoById);
-router.post("/empleados", verifyAdministrador, createEmpleado);
-router.patch("/empleados/:id", verifyAdministrador, updateEmpleado);
-router.delete("/empleados/:id", verifyAdministrador, deleteEmpleado);
+router.get("/empleados", verifyCoordinador, getEmpleados);
+router.get(
+  "/empleados/:id",
+  verifyCoordinador,
+  getEmpleadoById
+);
+router.post("/empleados", verifyCoordinador, coordinadorOnly, createEmpleado);
+router.patch(
+  "/empleados/:id",
+  verifyCoordinador,
+  coordinadorOnly,
+  updateEmpleado
+);
+router.delete(
+  "/empleados/:id",
+  verifyCoordinador,
+  coordinadorOnly,
+  deleteEmpleado
+);
 
 export default router;

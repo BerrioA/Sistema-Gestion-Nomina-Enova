@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
-import Administradores from "./AdminModel.js";
+import Coordinadores from "./CoordinadorModel.js";
 
 const { DataTypes } = Sequelize;
 
@@ -74,7 +74,7 @@ const Empleados = db.define(
         isNumeric: true,
       },
     },
-    administradorId: {
+    coordinadorId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -84,10 +84,22 @@ const Empleados = db.define(
   },
   {
     freezeTableName: true,
+    hooks: {
+      // Hook beforeCreate para asignar el site del coordinador al empleado
+      async beforeCreate(empleado) {
+        const coordinador = await Coordinadores.findByPk(
+          empleado.coordinadorId
+        );
+        if (coordinador) {
+          empleado.site = coordinador.site; // Asigna el site del coordinador al empleado
+        }
+      },
+    },
   }
 );
 
-Administradores.hasMany(Empleados);
-Empleados.belongsTo(Administradores, { foreignKey: "administradorId" });
+// Definición explícita del nombre de la clave foránea
+Coordinadores.hasMany(Empleados, { foreignKey: "coordinadorId" });
+Empleados.belongsTo(Coordinadores, { foreignKey: "coordinadorId" });
 
 export default Empleados;

@@ -6,7 +6,9 @@ import db from "./config/Database.js";
 import SequelizeStore from "connect-session-sequelize";
 import AdminRoute from "./routes/AdminRoute.js";
 import EmpleadoRoute from "./routes/EmpleadoRoute.js";
+import CoordinadorRoute from "./routes/CoordinadorRoute.js";
 import AutenticacionRoute from "./routes/AutenticacionRoute.js";
+
 dotenv.config();
 
 const app = express();
@@ -17,9 +19,9 @@ const store = new sessionStore({
   db: db,
 });
 
-// (async () => {
-//   await db.sync();
-// })();
+//  (async () => {
+//    await db.sync();
+//  })();
 
 app.use(
   session({
@@ -42,6 +44,7 @@ app.use(
 );
 app.use(express.json());
 app.use(AdminRoute);
+app.use(CoordinadorRoute);
 app.use(EmpleadoRoute);
 app.use(AutenticacionRoute);
 

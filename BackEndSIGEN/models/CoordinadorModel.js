@@ -1,10 +1,11 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
+import Administradores from "./AdminModel.js";
 
 const { DataTypes } = Sequelize;
 
-const Administradores = db.define(
-  "administradores",
+const Coordinadores = db.define(
+  "coordinador",
   {
     uuid: {
       type: DataTypes.STRING,
@@ -45,7 +46,21 @@ const Administradores = db.define(
         notEmpty: true,
       },
     },
+    site: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
     role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    charge: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -58,4 +73,8 @@ const Administradores = db.define(
   }
 );
 
-export default Administradores;
+
+Administradores.hasMany(Coordinadores);
+Coordinadores.belongsTo(Administradores, { foreignKey: "administradorId" });
+
+export default Coordinadores;

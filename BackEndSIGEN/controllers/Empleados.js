@@ -1,11 +1,11 @@
 import Empleado from "../models/EmpleadoModel.js";
-import Administrador from "../models/AdminModel.js";
+import Coordinador from "../models/CoordinadorModel.js";
 import { Op } from "sequelize";
 
 export const getEmpleados = async (req, res) => {
   try {
     let response;
-    if (req.role === "Administrador") {
+    if (req.role === "Coordinador") {
       response = await Empleado.findAll({
         attributes: [
           "uuid",
@@ -20,7 +20,7 @@ export const getEmpleados = async (req, res) => {
         ],
         include: [
           {
-            model: Administrador,
+            model: Coordinador,
             attributes: ["name", "email"],
           },
         ],
@@ -39,11 +39,11 @@ export const getEmpleados = async (req, res) => {
           "monthfees",
         ],
         where: {
-          administradorId: req.administradorId,
+          coordinadorId: req.coordinadorId,
         },
         include: [
           {
-            model: Administrador,
+            model: Coordinador,
             attributes: ["name", "email"],
           },
         ],
@@ -67,7 +67,7 @@ export const getEmpleadoById = async (req, res) => {
         .status(404)
         .json({ msg: "Datos del empleado no encontrados." });
     let response;
-    if (req.role === "Administrador") {
+    if (req.role === "Coordinador") {
       response = await Empleado.findOne({
         attributes: [
           "uuid",
@@ -85,7 +85,7 @@ export const getEmpleadoById = async (req, res) => {
         },
         include: [
           {
-            model: Administrador,
+            model: Coordinador,
             attributes: ["name", "email"],
           },
         ],
@@ -106,12 +106,12 @@ export const getEmpleadoById = async (req, res) => {
         where: {
           [Op.and]: [
             { id: empleado.id },
-            { administradorId: req.administradorId },
+            { coordinadorId: req.coordinadorId },
           ],
         },
         include: [
           {
-            model: Administrador,
+            model: Coordinador,
             attributes: ["name", "email"],
           },
         ],
@@ -136,7 +136,7 @@ export const createEmpleado = async (req, res) => {
       bankname: bankname,
       contnumber: contnumber,
       monthfees: monthfees,
-      administradorId: req.administradorId,
+      coordinadorId: req.coordinadorId,
     });
     res.status(202).json({ msg: "Empleado Registrado con Exito!" });
   } catch (error) {
@@ -184,7 +184,7 @@ export const updateEmpleado = async (req, res) => {
         }
       );
     } else {
-      if (req.administradorId !== empleado.administradorId)
+      if (req.coordinadorId !== empleado.coordinadorId)
         return res.status(403).json({ msg: "Acceso restringido!" });
       await Empleado.update(
         {
@@ -201,7 +201,7 @@ export const updateEmpleado = async (req, res) => {
           where: {
             [Op.and]: [
               { id: empleado.id },
-              { administradorId: req.administradorId },
+              { coordinadorId: req.coordinadorId },
             ],
           },
         }
@@ -231,20 +231,20 @@ export const deleteEmpleado = async (req, res) => {
       contnumber,
       monthfees,
     } = req.body;
-    if (req.role === "Administrador") {
+    if (req.role === "Coordinador") {
       await Empleado.destroy({
         where: {
           id: empleado.id,
         },
       });
     } else {
-      if (req.administradorId !== empleado.administradorId)
+      if (req.coordinadorId !== empleado.coordinadorId)
         return res.status(403).json({
           msg: "Acceso denegado, no tienes permisos para realizar esta acción.",
         });
       await Empleado.destroy({
         where: {
-          [Op.and]: [{ id: empleado.id }, { empleadoId: req.administradorId }],
+          [Op.and]: [{ id: empleado.id }, { empleadoId: req.coordinadorIdId }],
         },
       });
     }

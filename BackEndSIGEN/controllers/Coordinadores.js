@@ -1,11 +1,19 @@
-import Administrador from "../models/AdminModel.js";
+import Coordinador from "../models/CoordinadorModel.js";
 import argon2 from "argon2";
 
 //Función encargada de Mostrar todos los administradores.
-export const getAdministradores = async (req, res) => {
+export const getCoordinadores = async (req, res) => {
   try {
-    const response = await Administrador.findAll({
-      attributes: ["uuid", "name", "lastname", "email", "role"],
+    const response = await Coordinador.findAll({
+      attributes: [
+        "uuid",
+        "name",
+        "site",
+        "charge",
+        "lastname",
+        "email",
+        "role",
+      ],
     });
     res.status(200).json(response);
   } catch (error) {
@@ -14,10 +22,18 @@ export const getAdministradores = async (req, res) => {
 };
 
 //Función encargada de Mostrar un administrador por ID.
-export const getAdministradorById = async (req, res) => {
+export const getCoordinadorById = async (req, res) => {
   try {
-    const response = await Administrador.findOne({
-      attributes: ["uuid", "name", "lastname", "email", "role"],
+    const response = await Coordinador.findOne({
+      attributes: [
+        "uuid",
+        "name",
+        "site",
+        "charge",
+        "lastname",
+        "email",
+        "role",
+      ],
       where: {
         uuid: req.params.id,
       },
@@ -29,8 +45,9 @@ export const getAdministradorById = async (req, res) => {
 };
 
 //Función encargada de Crear o Registrar un Administrador.
-export const createAdministrador = async (req, res) => {
-  const { name, lastname, email, password, confPassword, role } = req.body;
+export const createCoordinador = async (req, res) => {
+  const { name, lastname, email, charge, site, password, confPassword, role } =
+    req.body;
   if (password === "" || password === null)
     return res.status(404).json({
       msg: "No ha ingresado una contraseña, por favor verifique y vuelva a intentar.",
@@ -41,10 +58,12 @@ export const createAdministrador = async (req, res) => {
     });
   const hashPassword = await argon2.hash(password);
   try {
-    await Administrador.create({
+    await Coordinador.create({
       name: name,
-      email: email,
       lastname: lastname,
+      email: email,
+      site: site,
+      charge: charge,
       password: hashPassword,
       role: role,
     });
@@ -55,24 +74,25 @@ export const createAdministrador = async (req, res) => {
 };
 
 //Función encargada de Actualizar un Administrador.
-export const updateAdministrador = async (req, res) => {
-  const administrador = await Administrador.findOne({
+export const updateCoordinador = async (req, res) => {
+  const coordinador = await Coordinador.findOne({
     where: {
       uuid: req.params.id,
     },
   });
 
-  if (!administrador) {
+  if (!coordinador) {
     return res
       .status(404)
       .json({ msg: "No tiene acceso para realizar esta acción." });
   }
 
-  const { name, lastname, email, password, confPassword, role } = req.body;
+  const { name, lastname, email, charge, password, confPassword, role } =
+    req.body;
   let hashPassword;
 
   if (!password || password === "") {
-    hashPassword = administrador.password;
+    hashPassword = coordinador.password;
   } else {
     if (password !== confPassword) {
       return res.status(400).json({
@@ -90,17 +110,18 @@ export const updateAdministrador = async (req, res) => {
   }
 
   try {
-    await Administrador.update(
+    await Coordinador.update(
       {
         name: name,
         email: email,
         lastname: lastname,
         password: hashPassword,
         role: role,
+        charge: charge,
       },
       {
         where: {
-          id: administrador.id,
+          id: coordinador.id,
         },
       }
     );
@@ -110,18 +131,18 @@ export const updateAdministrador = async (req, res) => {
   }
 };
 
-export const deleteAdministrador = async (req, res) => {
-  const administrador = await Administrador.findOne({
+export const deleteCoordinador = async (req, res) => {
+  const coordinador = await Coordinador.findOne({
     where: {
       uuid: req.params.id,
     },
   });
-  if (!administrador)
+  if (!coordinador)
     res.status(404).json({ msg: "No se encuentra el usuario." });
   try {
-    await Administrador.destroy({
+    await Coordinador.destroy({
       where: {
-        id: administrador.id,
+        id: coordinador.id,
       },
     });
     res.status(200).json({ msg: "¡Usuario Eliminado con exito!" });
