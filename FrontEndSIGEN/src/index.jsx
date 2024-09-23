@@ -1,11 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import './Styles/Index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "./app/store";
+import App from "./App";
+import "bulma/css/bulma.css";
+import axios from "axios";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+axios.defaults.withCredentials = true;
+
+const container = document.getElementById("root");
+
+const root = ReactDOM.createRoot(container);
 root.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </React.StrictMode>
 );

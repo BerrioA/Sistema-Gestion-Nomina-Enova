@@ -1,49 +1,77 @@
-import "./Login.css";
-import Logo from "../../assets/Images/LOGO-ACET.png";
-import { FaRegUser } from "react-icons/fa";
-import { RiLockPasswordLine } from "react-icons/ri";
-import { MdBackupTable } from "react-icons/md";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { LoginUser, reset } from "../../features/authSlice";
 
-const InfoSigen = () => (
-  <div className="titulo">
-    <div className="container-titulo">
-      <MdBackupTable />
-      <h1>SIGEN</h1>
-    </div>
-    <p>Sistema Integrado de Gestión de Nóminas.</p>
-  </div>
-);
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, isError, isSuccess, isLoading, message } = useSelector(
+    (state) => state.auth
+  );
 
-export const Login = () => (
-  <div className="container">
-    <div className="container-login">
-      <div className="container-input">
-        <p className="texto-bienvenido">BIENVENIDO A</p>
-        <InfoSigen />
-        <form>
-          <div className="inputs-target">
-            <FaRegUser className="input-icon" />
-            <input type="text" placeholder="Ingrese su usuario" />
+  useEffect(() => {
+    if (user || isSuccess) {
+      navigate("/dashboard");
+    }
+    dispatch(reset());
+  }, [user, isSuccess, dispatch, navigate]);
+
+  const Auth = (e) => {
+    e.preventDefault();
+    dispatch(LoginUser({ email, password }));
+  };
+
+  return (
+    <section className="hero is-fullheight is-fullwidth">
+      <div className="hero-body">
+        <div className="container">
+          <div className="columns is-centered">
+            <div className="column is-4">
+              <form onSubmit={Auth} className="box">
+                {isError && <p className="has-text-centered">{message}</p>}
+                <h1 className="title is-2">Iniciar Sesión</h1>
+                <div className="field">
+                  <label className="label">Email</label>
+                  <div className="control">
+                    <input
+                      type="text"
+                      className="input"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="Email"
+                    />
+                  </div>
+                </div>
+                <div className="field">
+                  <label className="label">Password</label>
+                  <div className="control">
+                    <input
+                      type="password"
+                      className="input"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="******"
+                    />
+                  </div>
+                </div>
+                <div className="field mt-5">
+                  <button
+                    type="submit"
+                    className="button is-success is-fullwidth"
+                  >
+                    {isLoading ? "Loading..." : "Login"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <div className="inputs-target">
-            <RiLockPasswordLine className="input-icon" />
-            <input type="password" placeholder="Ingrese su contraseña" />
-          </div>
-          <button className="btn-login">Iniciar Sesión</button>
-        </form>
+        </div>
       </div>
-      <div className="container-info">
-        <div className="info-overlay"></div>
-        <img
-          className="logo-academia"
-          src={Logo}
-          alt="Logo de Academia Enova Tecnología"
-        />
-        <p>
-          Aprende & Practica con nuestros cursos complementarios. Capacitaciones
-          a nivel nacional.
-        </p>
-      </div>
-    </div>
-  </div>
-);
+    </section>
+  );
+};
+
+export default Login;
