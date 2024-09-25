@@ -19,9 +19,9 @@ const store = new sessionStore({
   db: db,
 });
 
-  // (async () => {
-  //   await db.sync();
-  // })();
+// (async () => {
+//   await db.sync();
+// })();
 
 app.use(
   session({
@@ -39,13 +39,13 @@ app.use(
   cors({
     credentials: true,
     //Dominios con accedo a la API
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:5173"],
   })
 );
 app.use(express.json());
 app.use(AdminRoute);
 app.use(CoordinadorRoute);
-app.use(EmpleadoRoute)
+app.use(EmpleadoRoute);
 app.use(AutenticacionRoute);
 
 // store.sync();
