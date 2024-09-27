@@ -22,7 +22,6 @@ router.patch("/empleados/:id", verifyCoordinador, updateEmpleado);
 router.delete(
   "/empleados/:id",
   verifyCoordinador,
-  coordinadorOnly,
   deleteEmpleado
 );
 

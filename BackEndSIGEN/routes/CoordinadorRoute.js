@@ -33,8 +33,6 @@ router.post(
 );
 router.patch(
   "/coordinadores/:id",
-  verifyAdministrador,
-  administradorOnly,
   updateCoordinador
 );
 router.delete(
