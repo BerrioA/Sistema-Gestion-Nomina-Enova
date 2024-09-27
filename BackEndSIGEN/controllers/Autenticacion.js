@@ -4,17 +4,16 @@ import argon2 from "argon2";
 
 export const Login = async (req, res) => {
   try {
-
     let user = await Administrador.findOne({
       where: {
-        email: req.body.email,
+        correo: req.body.correo,
       },
     });
 
     if (!user) {
       user = await Coordinador.findOne({
         where: {
-          email: req.body.email,
+          correo: req.body.correo,
         },
       });
 
@@ -22,7 +21,6 @@ export const Login = async (req, res) => {
         return res.status(404).json({ msg: "Usuario no encontrado." });
       }
     }
-
 
     const match = await argon2.verify(user.password, req.body.password);
     if (!match) return res.status(400).json({ msg: "Contraseña incorrecta." });
@@ -35,14 +33,13 @@ export const Login = async (req, res) => {
     }
 
     // Devolver la información del usuario
-    const { uuid, name, lastname, email, role } = user;
-    res.status(200).json({ uuid, name, lastname, email, role });
+    const { uuid, nombre, apellido, correo, rol } = user;
+    res.status(200).json({ uuid, nombre, apellido, correo, rol });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Error en el servidor." });
   }
 };
-
 
 // Función encargada de manejar si está dentro de la sesión.
 export const Me = async (req, res) => {
@@ -50,7 +47,7 @@ export const Me = async (req, res) => {
     // Verificar si el usuario está logueado como administrador
     if (req.session.administradorId) {
       const administrador = await Administrador.findOne({
-        attributes: ["uuid", "name", "lastname", "email", "role"],
+        attributes: ["uuid", "nombre", "apellido", "correo", "rol"],
         where: {
           uuid: req.session.administradorId,
         },
@@ -64,7 +61,7 @@ export const Me = async (req, res) => {
     // Verificar si el usuario está logueado como coordinador
     if (req.session.coordinadorId) {
       const coordinador = await Coordinador.findOne({
-        attributes: ["uuid", "name", "lastname", "email", "role"],
+        attributes: ["uuid", "nombre", "apellido", "correo", "rol"],
         where: {
           uuid: req.session.coordinadorId,
         },
@@ -90,4 +87,3 @@ export const logOut = (req, res) => {
     res.status(200).json({ msg: "Te has desconectado." });
   });
 };
-

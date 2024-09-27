@@ -12,7 +12,7 @@ export const verifyAdministrador = async (req, res, next) => {
   if (!administrador)
     return res.status(404).json({ msg: "No se ha encontrado al usuario." });
   req.administradorId = administrador.id;
-  req.role = administrador.role;
+  req.rol = administrador.rol;
   next();
 };
 
@@ -24,7 +24,7 @@ export const administradorOnly = async (req, res, next) => {
   });
   if (!administrador)
     return res.status(404).json({ msg: "No se ha encontrado al usuario." });
-  if (administrador.role !== "Administrador")
+  if (administrador.rol !== "Administrador")
     return res.status(403).json({
       msg: "Acceso denegado, no tienes permiso para realizar esta acción.",
     });

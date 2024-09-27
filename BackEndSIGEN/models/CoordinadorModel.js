@@ -15,7 +15,7 @@ const Coordinadores = db.define(
         notEmpty: true,
       },
     },
-    name: {
+    nombre: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -23,7 +23,7 @@ const Coordinadores = db.define(
         len: [3, 100],
       },
     },
-    lastname: {
+    apellido: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -31,7 +31,7 @@ const Coordinadores = db.define(
         len: [3, 100],
       },
     },
-    email: {
+    correo: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -46,21 +46,21 @@ const Coordinadores = db.define(
         notEmpty: true,
       },
     },
-    site: {
+    sede: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
-    role: {
+    rol: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
-    charge: {
+    cargo: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -73,8 +73,7 @@ const Coordinadores = db.define(
   }
 );
 
-
-Administradores.hasMany(Coordinadores);
+Administradores.hasMany(Coordinadores, { foreignKey: "administradorId" });
 Coordinadores.belongsTo(Administradores, { foreignKey: "administradorId" });
 
 export default Coordinadores;

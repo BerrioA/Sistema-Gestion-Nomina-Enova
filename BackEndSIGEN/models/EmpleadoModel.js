@@ -15,21 +15,21 @@ const Empleados = db.define(
         notEmpty: true,
       },
     },
-    site: {
+    sede: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
-    charge: {
+    cargo: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
-    name: {
+    nombre: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -37,7 +37,7 @@ const Empleados = db.define(
         len: [3, 100],
       },
     },
-    lastname: {
+    apellido: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -52,21 +52,21 @@ const Empleados = db.define(
         notEmpty: true,
       },
     },
-    bankname: {
+    banco: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
-    contnumber: {
+    numcuenta: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
-    monthfees: {
+    honomensual: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {

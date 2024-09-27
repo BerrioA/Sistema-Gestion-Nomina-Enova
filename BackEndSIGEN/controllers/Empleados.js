@@ -5,23 +5,23 @@ import { Op } from "sequelize";
 export const getEmpleados = async (req, res) => {
   try {
     let response;
-    if (req.role === "Coordinador") {
+    if (req.rol === "Coordinador") {
       response = await Empleado.findAll({
         attributes: [
           "uuid",
-          "site",
-          "charge",
-          "name",
-          "lastname",
+          "sede",
+          "cargo",
+          "nombre",
+          "apellido",
           "nit",
-          "bankname",
-          "contnumber",
-          "monthfees",
+          "banco",
+          "numcuenta",
+          "honomensual",
         ],
         include: [
           {
             model: Coordinador,
-            attributes: ["name", "email"],
+            attributes: ["nombre", "correo"],
           },
         ],
       });
@@ -29,14 +29,14 @@ export const getEmpleados = async (req, res) => {
       response = await Empleado.findAll({
         attributes: [
           "uuid",
-          "site",
-          "charge",
-          "name",
-          "lastname",
+          "sede",
+          "cargo",
+          "nombre",
+          "apellido",
           "nit",
-          "bankname",
-          "contnumber",
-          "monthfees",
+          "banco",
+          "numcuenta",
+          "honomensual",
         ],
         where: {
           coordinadorId: req.coordinadorId,
@@ -44,7 +44,7 @@ export const getEmpleados = async (req, res) => {
         include: [
           {
             model: Coordinador,
-            attributes: ["name", "email"],
+            attributes: ["nombre", "correo"],
           },
         ],
       });
@@ -67,18 +67,18 @@ export const getEmpleadoById = async (req, res) => {
         .status(404)
         .json({ msg: "Datos del empleado no encontrados." });
     let response;
-    if (req.role === "Coordinador") {
+    if (req.rol === "Coordinador") {
       response = await Empleado.findOne({
         attributes: [
           "uuid",
-          "site",
-          "charge",
-          "name",
-          "lastname",
+          "sede",
+          "cargo",
+          "nombre",
+          "apellido",
           "nit",
-          "bankname",
-          "contnumber",
-          "monthfees",
+          "banco",
+          "numcuenta",
+          "honomensual",
         ],
         where: {
           id: empleado.id,
@@ -86,7 +86,7 @@ export const getEmpleadoById = async (req, res) => {
         include: [
           {
             model: Coordinador,
-            attributes: ["name", "email"],
+            attributes: ["nombre", "correo"],
           },
         ],
       });
@@ -94,25 +94,22 @@ export const getEmpleadoById = async (req, res) => {
       response = await Empleado.findOne({
         attributes: [
           "uuid",
-          "site",
-          "charge",
-          "name",
-          "lastname",
+          "sede",
+          "cargo",
+          "nombre",
+          "apellido",
           "nit",
-          "bankname",
-          "contnumber",
-          "monthfees",
+          "banco",
+          "numcuenta",
+          "honomensual",
         ],
         where: {
-          [Op.and]: [
-            { id: empleado.id },
-            { coordinadorId: req.coordinadorId },
-          ],
+          [Op.and]: [{ id: empleado.id }, { coordinadorId: req.coordinadorId }],
         },
         include: [
           {
             model: Coordinador,
-            attributes: ["name", "email"],
+            attributes: ["nombre", "correo"],
           },
         ],
       });
@@ -124,18 +121,18 @@ export const getEmpleadoById = async (req, res) => {
 };
 
 export const createEmpleado = async (req, res) => {
-  const { site, charge, name, nit, lastname, bankname, contnumber, monthfees } =
+  const { sede, cargo, nombre, nit, apellido, banco, numcuenta, honomensual } =
     req.body;
   try {
     await Empleado.create({
-      site: site,
-      charge: charge,
-      name: name,
-      lastname: lastname,
+      sede: sede,
+      cargo: cargo,
+      nombre: nombre,
+      apellido: apellido,
       nit: nit,
-      bankname: bankname,
-      contnumber: contnumber,
-      monthfees: monthfees,
+      banco: banco,
+      numcuenta: numcuenta,
+      honomensual: honomensual,
       coordinadorId: req.coordinadorId,
     });
     res.status(202).json({ msg: "Empleado Registrado con Exito!" });
@@ -156,26 +153,26 @@ export const updateEmpleado = async (req, res) => {
         .status(404)
         .json({ msg: "Datos del empleados no encontrados." });
     const {
-      site,
-      charge,
-      name,
-      lastname,
+      sede,
+      cargo,
+      nombre,
+      apellido,
       nit,
-      bankname,
-      contnumber,
-      monthfees,
+      banco,
+      numcuenta,
+      honomensual,
     } = req.body;
     if (req.role === "Administrador") {
       await Empleado.update(
         {
-          site,
-          charge,
-          name,
-          lastname,
+          sede,
+          cargo,
+          nombre,
+          apellido,
           nit,
-          bankname,
-          contnumber,
-          monthfees,
+          banco,
+          numcuenta,
+          honomensual,
         },
         {
           where: {
@@ -188,14 +185,14 @@ export const updateEmpleado = async (req, res) => {
         return res.status(403).json({ msg: "Acceso restringido!" });
       await Empleado.update(
         {
-          site,
-          charge,
-          name,
-          lastname,
+          sede,
+          cargo,
+          nombre,
+          apellido,
           nit,
-          bankname,
-          contnumber,
-          monthfees,
+          banco,
+          numcuenta,
+          honomensual,
         },
         {
           where: {
@@ -222,16 +219,16 @@ export const deleteEmpleado = async (req, res) => {
     });
     if (!empleado) return res.status(404).json({ msg: "Datos no encontrados" });
     const {
-      site,
-      charge,
-      name,
-      lastname,
+      sede,
+      cargo,
+      nombre,
+      apellido,
       nit,
-      bankname,
-      contnumber,
-      monthfees,
+      banco,
+      numcuenta,
+      honomensual,
     } = req.body;
-    if (req.role === "Coordinador") {
+    if (req.rol === "Coordinador") {
       await Empleado.destroy({
         where: {
           id: empleado.id,

@@ -7,12 +7,12 @@ export const getCoordinadores = async (req, res) => {
     const response = await Coordinador.findAll({
       attributes: [
         "uuid",
-        "name",
-        "site",
-        "charge",
-        "lastname",
-        "email",
-        "role",
+        "nombre",
+        "apellido",
+        "sede",
+        "cargo",
+        "correo",
+        "rol",
       ],
     });
     res.status(200).json(response);
@@ -27,12 +27,12 @@ export const getCoordinadorById = async (req, res) => {
     const response = await Coordinador.findOne({
       attributes: [
         "uuid",
-        "name",
-        "site",
-        "charge",
-        "lastname",
-        "email",
-        "role",
+        "nombre",
+        "apellido",
+        "sede",
+        "cargo",
+        "correo",
+        "rol",
       ],
       where: {
         uuid: req.params.id,
@@ -46,7 +46,7 @@ export const getCoordinadorById = async (req, res) => {
 
 //Función encargada de Crear o Registrar un Administrador.
 export const createCoordinador = async (req, res) => {
-  const { name, lastname, email, charge, site, password, confPassword, role } =
+  const { nombre, apellido, correo, cargo, sede, password, confPassword, rol } =
     req.body;
   if (password === "" || password === null)
     return res.status(404).json({
@@ -59,13 +59,13 @@ export const createCoordinador = async (req, res) => {
   const hashPassword = await argon2.hash(password);
   try {
     await Coordinador.create({
-      name: name,
-      lastname: lastname,
-      email: email,
-      site: site,
-      charge: charge,
+      nombre: nombre,
+      apellido: apellido,
+      correo: correo,
+      sede: sede,
+      cargo: cargo,
       password: hashPassword,
-      role: role,
+      rol: rol,
     });
     res.status(201).json({ msg: "¡Usuario registrado con exito!" });
   } catch (error) {
@@ -87,7 +87,7 @@ export const updateCoordinador = async (req, res) => {
       .json({ msg: "No tiene acceso para realizar esta acción." });
   }
 
-  const { name, lastname, email, charge, password, confPassword, role } =
+  const { nombre, apellido, correo, cargo, password, confPassword, rol } =
     req.body;
   let hashPassword;
 
@@ -112,12 +112,12 @@ export const updateCoordinador = async (req, res) => {
   try {
     await Coordinador.update(
       {
-        name: name,
-        email: email,
-        lastname: lastname,
+        nombre: nombre,
+        correo: correo,
+        apellido: apellido,
         password: hashPassword,
-        role: role,
-        charge: charge,
+        rol: rol,
+        cargo: cargo,
       },
       {
         where: {

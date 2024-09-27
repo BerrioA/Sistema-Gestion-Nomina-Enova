@@ -25,7 +25,7 @@ router.get(
   administradorOnly,
   getAdministradorById
 );
-router.post("/administradores", administradorOnly, createAdministrador);
+router.post("/administradores",  createAdministrador);
 router.patch(
   "/administradores/:id",
   verifyAdministrador,

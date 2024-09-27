@@ -14,7 +14,7 @@ const Administradores = db.define(
         notEmpty: true,
       },
     },
-    name: {
+    nombre: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -22,7 +22,7 @@ const Administradores = db.define(
         len: [3, 100],
       },
     },
-    lastname: {
+    apellido: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -30,7 +30,7 @@ const Administradores = db.define(
         len: [3, 100],
       },
     },
-    email: {
+    correo: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -45,7 +45,7 @@ const Administradores = db.define(
         notEmpty: true,
       },
     },
-    role: {
+    rol: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {

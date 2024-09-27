@@ -11,14 +11,16 @@ import {
   coordinadorOnly,
   verifyCoordinador,
 } from "../middleware/AutenticacionCoordinador.js";
+import { verifyAdministrador } from "../middleware/AutenticacionAdministrador.js";
 const router = express.Router();
 
-router.get("/empleados", verifyCoordinador, getEmpleados);
 router.get(
-  "/empleados/:id",
+  "/empleados",
   verifyCoordinador,
-  getEmpleadoById
+  getEmpleados
 );
+
+router.get("/empleados/:id", verifyCoordinador, getEmpleadoById);
 router.post("/empleados", verifyCoordinador, coordinadorOnly, createEmpleado);
 router.patch(
   "/empleados/:id",

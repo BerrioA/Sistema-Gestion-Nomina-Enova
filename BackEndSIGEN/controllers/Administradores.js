@@ -5,7 +5,7 @@ import argon2 from "argon2";
 export const getAdministradores = async (req, res) => {
   try {
     const response = await Administrador.findAll({
-      attributes: ["uuid", "name", "lastname", "email", "role"],
+      attributes: ["uuid", "nombre", "apellido", "correo", "rol"],
     });
     res.status(200).json(response);
   } catch (error) {
@@ -17,7 +17,7 @@ export const getAdministradores = async (req, res) => {
 export const getAdministradorById = async (req, res) => {
   try {
     const response = await Administrador.findOne({
-      attributes: ["uuid", "name", "lastname", "email", "role"],
+      attributes: ["uuid", "nombre", "apellido", "correo", "rol"],
       where: {
         uuid: req.params.id,
       },
@@ -30,7 +30,7 @@ export const getAdministradorById = async (req, res) => {
 
 //Función encargada de Crear o Registrar un Administrador.
 export const createAdministrador = async (req, res) => {
-  const { name, lastname, email, password, confPassword, role } = req.body;
+  const { nombre, apellido, correo, password, confPassword, rol } = req.body;
   if (password === "" || password === null)
     return res.status(404).json({
       msg: "No ha ingresado una contraseña, por favor verifique y vuelva a intentar.",
@@ -42,11 +42,11 @@ export const createAdministrador = async (req, res) => {
   const hashPassword = await argon2.hash(password);
   try {
     await Administrador.create({
-      name: name,
-      email: email,
-      lastname: lastname,
+      nombre: nombre,
+      apellido: apellido,
+      correo: correo,
       password: hashPassword,
-      role: role,
+      rol: rol,
     });
     res.status(201).json({ msg: "¡Usuario registrado con exito!" });
   } catch (error) {
@@ -68,7 +68,7 @@ export const updateAdministrador = async (req, res) => {
       .json({ msg: "No tiene acceso para realizar esta acción." });
   }
 
-  const { name, lastname, email, password, confPassword, role } = req.body;
+  const { nombre, apellido, correo, password, confPassword, rol } = req.body;
   let hashPassword;
 
   if (!password || password === "") {
@@ -92,11 +92,11 @@ export const updateAdministrador = async (req, res) => {
   try {
     await Administrador.update(
       {
-        name: name,
-        email: email,
-        lastname: lastname,
+        nombre: nombre,
+        apellido: apellido,
+        correo: correo,
         password: hashPassword,
-        role: role,
+        rol: rol,
       },
       {
         where: {

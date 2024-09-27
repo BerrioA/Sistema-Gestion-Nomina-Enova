@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import db from "./config/Database.js";
 import SequelizeStore from "connect-session-sequelize";
 import AdminRoute from "./routes/AdminRoute.js";
+import NominaRoute from "./routes/NominaRoute.js";
 import EmpleadoRoute from "./routes/EmpleadoRoute.js";
 import CoordinadorRoute from "./routes/CoordinadorRoute.js";
 import AutenticacionRoute from "./routes/AutenticacionRoute.js";
@@ -19,9 +20,9 @@ const store = new sessionStore({
   db: db,
 });
 
-// (async () => {
-//   await db.sync();
-// })();
+//  (async () => {
+//    await db.sync();
+//  })();
 
 app.use(
   session({
@@ -47,8 +48,9 @@ app.use(AdminRoute);
 app.use(CoordinadorRoute);
 app.use(EmpleadoRoute);
 app.use(AutenticacionRoute);
+app.use(NominaRoute);
 
-// store.sync();
+//  store.sync();
 
 app.listen(process.env.APP_PORT, () => {
   console.log(
