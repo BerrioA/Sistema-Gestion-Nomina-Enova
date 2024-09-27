@@ -43,10 +43,12 @@ const Administradores = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: [8, 100],
       },
     },
     rol: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM,
+      values: ["Administrador", "Coordinador", "Developer"],
       allowNull: false,
       validate: {
         notEmpty: true,

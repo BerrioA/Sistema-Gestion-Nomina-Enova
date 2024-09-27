@@ -44,20 +44,28 @@ export const getCoordinadorById = async (req, res) => {
   }
 };
 
-//Función encargada de Crear o Registrar un Administrador.
+// Función encargada de Crear o Registrar un Administrador.
 export const createCoordinador = async (req, res) => {
   const { nombre, apellido, correo, cargo, sede, password, confPassword, rol } =
     req.body;
-  if (password === "" || password === null)
+
+  // Verificación de contraseña
+  if (password === "" || password === null) {
     return res.status(404).json({
       msg: "No ha ingresado una contraseña, por favor verifique y vuelva a intentar.",
     });
-  if (password !== confPassword)
+  }
+
+  if (password !== confPassword) {
     return res.status(400).json({
-      msg: "Contraseñas no coincide, por favor verifique y vuelva a intentar.",
+      msg: "Las contraseñas no coinciden, por favor verifique y vuelva a intentar.",
     });
-  const hashPassword = await argon2.hash(password);
+  }
+
+  const hashPassword = await argon2.hash(password); // Hash de la contraseña
+
   try {
+    // Crear el coordinador con el id del administrador
     await Coordinador.create({
       nombre: nombre,
       apellido: apellido,
@@ -66,10 +74,11 @@ export const createCoordinador = async (req, res) => {
       cargo: cargo,
       password: hashPassword,
       rol: rol,
+      administradorId: req.administradorId, // Asegúrate de que esto esté correctamente asignado
     });
-    res.status(201).json({ msg: "¡Usuario registrado con exito!" });
+    res.status(201).json({ msg: "¡Usuario registrado con éxito!" });
   } catch (error) {
-    res.status(400).json({ msg: error.message });
+    res.status(400).json({ msg: error.message }); // Manejo de errores
   }
 };
 

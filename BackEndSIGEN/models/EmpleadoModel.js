@@ -64,10 +64,11 @@ const Empleados = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: [10, 20],
       },
     },
     honomensual: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT,
       allowNull: false,
       validate: {
         notEmpty: true,
@@ -85,13 +86,12 @@ const Empleados = db.define(
   {
     freezeTableName: true,
     hooks: {
-      // Hook beforeCreate para asignar el site del coordinador al empleado
       async beforeCreate(empleado) {
         const coordinador = await Coordinadores.findByPk(
           empleado.coordinadorId
         );
         if (coordinador) {
-          empleado.site = coordinador.site; // Asigna el site del coordinador al empleado
+          empleado.sede = coordinador.sede; // Asigna la sede del coordinador al empleado
         }
       },
     },
@@ -99,7 +99,13 @@ const Empleados = db.define(
 );
 
 // Definición explícita del nombre de la clave foránea
-Coordinadores.hasMany(Empleados, { foreignKey: "coordinadorId" });
-Empleados.belongsTo(Coordinadores, { foreignKey: "coordinadorId" });
+Coordinadores.hasMany(Empleados, {
+  foreignKey: "coordinadorId",
+  onDelete: "CASCADE",
+});
+Empleados.belongsTo(Coordinadores, {
+  foreignKey: "coordinadorId",
+  onDelete: "CASCADE",
+});
 
 export default Empleados;

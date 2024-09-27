@@ -4,56 +4,39 @@ import { Op } from "sequelize";
 
 export const getEmpleados = async (req, res) => {
   try {
-    let response;
-    if (req.rol === "Coordinador") {
-      response = await Empleado.findAll({
-        attributes: [
-          "uuid",
-          "sede",
-          "cargo",
-          "nombre",
-          "apellido",
-          "nit",
-          "banco",
-          "numcuenta",
-          "honomensual",
-        ],
-        include: [
-          {
-            model: Coordinador,
-            attributes: ["nombre", "correo"],
-          },
-        ],
-      });
-    } else {
-      response = await Empleado.findAll({
-        attributes: [
-          "uuid",
-          "sede",
-          "cargo",
-          "nombre",
-          "apellido",
-          "nit",
-          "banco",
-          "numcuenta",
-          "honomensual",
-        ],
-        where: {
-          coordinadorId: req.coordinadorId,
+    // Condición para verificar el rol y la lógica de búsqueda
+    const whereClause =
+      req.rol === "Coordinador"
+        ? { coordinadorId: req.coordinadorId } // Si es coordinador, filtra por su ID
+        : {}; // Si es administrador, no filtra
+
+    const response = await Empleado.findAll({
+      attributes: [
+        "uuid",
+        "sede",
+        "cargo",
+        "nombre",
+        "apellido",
+        "nit",
+        "banco",
+        "numcuenta",
+        "honomensual",
+      ],
+      where: whereClause,
+      include: [
+        {
+          model: Coordinador,
+          attributes: ["nombre", "correo"],
         },
-        include: [
-          {
-            model: Coordinador,
-            attributes: ["nombre", "correo"],
-          },
-        ],
-      });
-    }
+      ],
+    });
+
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }
 };
+
 
 export const getEmpleadoById = async (req, res) => {
   try {
@@ -121,7 +104,7 @@ export const getEmpleadoById = async (req, res) => {
 };
 
 export const createEmpleado = async (req, res) => {
-  const { sede, cargo, nombre, nit, apellido, banco, numcuenta, honomensual } =
+  const { sede, cargo, nombre, apellido, nit, banco, numcuenta, honomensual } =
     req.body;
   try {
     await Empleado.create({

@@ -11,23 +11,14 @@ import {
   coordinadorOnly,
   verifyCoordinador,
 } from "../middleware/AutenticacionCoordinador.js";
-import { verifyAdministrador } from "../middleware/AutenticacionAdministrador.js";
+import { verifyTypeUser } from "../middleware/VerifyTypeUser.js";
 const router = express.Router();
 
-router.get(
-  "/empleados",
-  verifyCoordinador,
-  getEmpleados
-);
+router.get("/empleados", verifyTypeUser, getEmpleados);
 
 router.get("/empleados/:id", verifyCoordinador, getEmpleadoById);
-router.post("/empleados", verifyCoordinador, coordinadorOnly, createEmpleado);
-router.patch(
-  "/empleados/:id",
-  verifyCoordinador,
-  coordinadorOnly,
-  updateEmpleado
-);
+router.post("/empleados", verifyCoordinador, createEmpleado);
+router.patch("/empleados/:id", verifyCoordinador, updateEmpleado);
 router.delete(
   "/empleados/:id",
   verifyCoordinador,
