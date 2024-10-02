@@ -21,7 +21,7 @@ import {
 const router = express.Router();
 
 // Administradores y coordinadores pueden ver las nóminas
-router.get("/nominas",verifyAdministrador, getNominas);
+router.get("/nominas", getNominas);
 router.get(
   "/nominas/:id",
   verifyCoordinador,

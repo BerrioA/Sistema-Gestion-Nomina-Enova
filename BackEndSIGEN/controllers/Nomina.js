@@ -73,7 +73,6 @@ export const getNominaById = async (req, res) => {
   }
 };
 
-//Función para crear o registrar una nómina
 export const createNomina = async (req, res) => {
   const {
     honoquincena,
@@ -91,10 +90,18 @@ export const createNomina = async (req, res) => {
     pagosadicionalespendientes,
     saldopendiente,
     observaciones,
-    empleadoId,
+    empleadoId
   } = req.body;
 
   try {
+    // Verificar si el empleado existe en la tabla empleado
+    const empleado = await Empleado.findOne({ where: { id: empleadoId } });
+
+    if (!empleado) {
+      return res.status(404).json({ msg: "El empleado no existe." });
+    }
+
+    // Crear la nómina solo si el empleado existe
     await Nomina.create({
       honoquincena,
       honodia,
@@ -113,11 +120,13 @@ export const createNomina = async (req, res) => {
       observaciones,
       empleadoId,
     });
+
     res.status(201).json({ msg: "¡Nómina registrada con éxito!" });
   } catch (error) {
     res.status(400).json({ msg: error.message });
   }
 };
+
 
 //Función para actualizar una nómina
 export const updateNomina = async (req, res) => {

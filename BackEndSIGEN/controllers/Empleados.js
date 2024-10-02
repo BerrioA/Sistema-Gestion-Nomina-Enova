@@ -10,6 +10,7 @@ export const getEmpleados = async (req, res) => {
     if (req.rol === "Administrador") {
       response = await Empleado.findAll({
         attributes: [
+          "id",
           "uuid",
           "sede",
           "cargo",
@@ -31,6 +32,7 @@ export const getEmpleados = async (req, res) => {
       // Si es un coordinador, solo se recuperan los empleados vinculados
       response = await Empleado.findAll({
         attributes: [
+          "id",
           "uuid",
           "sede",
           "cargo",
@@ -63,19 +65,25 @@ export const getEmpleados = async (req, res) => {
 
 export const getEmpleadoById = async (req, res) => {
   try {
+    // Buscar empleado por uuid
     const empleado = await Empleado.findOne({
       where: {
-        uuid: req.params.id,
+        uuid: req.params.id, // Buscar por UUID
       },
     });
+
     if (!empleado)
       return res
         .status(404)
         .json({ msg: "Datos del empleado no encontrados." });
+
     let response;
+
+    // Si el rol es "Coordinador"
     if (req.rol === "Coordinador") {
       response = await Empleado.findOne({
         attributes: [
+          "id", // Incluir id
           "uuid",
           "sede",
           "cargo",
@@ -87,7 +95,7 @@ export const getEmpleadoById = async (req, res) => {
           "honomensual",
         ],
         where: {
-          id: empleado.id,
+          id: empleado.id, // Buscar por id
         },
         include: [
           {
@@ -97,8 +105,10 @@ export const getEmpleadoById = async (req, res) => {
         ],
       });
     } else {
+      // Si el rol no es "Coordinador"
       response = await Empleado.findOne({
         attributes: [
+          "id", // Incluir id aquí también
           "uuid",
           "sede",
           "cargo",
@@ -120,11 +130,15 @@ export const getEmpleadoById = async (req, res) => {
         ],
       });
     }
+
+    // Enviar respuesta
     res.status(200).json(response);
   } catch (error) {
+    // Enviar mensaje de error
     res.status(500).json({ msg: error.message });
   }
 };
+
 
 export const createEmpleado = async (req, res) => {
   const { sede, cargo, nombre, apellido, nit, banco, numcuenta, honomensual } =
