@@ -118,11 +118,10 @@ const Nomina = db.define(
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notEmpty: true,
+        notEmpty: false,
       },
     },
     empleadoId: {
-      // Clave foránea para la relación con el empleado
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -136,7 +135,8 @@ const Nomina = db.define(
 );
 
 // Relación de Nomina con Empleados
-Nomina.belongsTo(Empleados, { foreignKey: "empleadoId" });
 Empleados.hasMany(Nomina, { foreignKey: "empleadoId" });
+Nomina.belongsTo(Empleados, { foreignKey: "empleadoId" });
+
 
 export default Nomina;

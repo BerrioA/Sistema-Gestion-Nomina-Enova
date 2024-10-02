@@ -49,7 +49,7 @@ const Administradores = db.define(
     rol: {
       type: DataTypes.ENUM,
       values: ["Administrador", "Coordinador", "Developer"],
-      allowNull: false,
+      allowNull: true,
       validate: {
         notEmpty: true,
       },

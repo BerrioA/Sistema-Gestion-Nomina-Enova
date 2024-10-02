@@ -24,12 +24,12 @@ const router = express.Router();
 router.get("/nominas",verifyAdministrador, getNominas);
 router.get(
   "/nominas/:id",
-  [verifyCoordinador, verifyAdministrador],
+  verifyCoordinador,
   getNominaById
 );
 
 // Solo coordinadores pueden crear, actualizar o eliminar nóminas
-router.post("/nominas", verifyCoordinador, coordinadorOnly, createNomina);
+router.post("/nominas", verifyCoordinador,createNomina);
 router.patch("/nominas/:id", verifyCoordinador, coordinadorOnly, updateNomina);
 router.delete("/nominas/:id", verifyCoordinador, coordinadorOnly, deleteNomina);
 
