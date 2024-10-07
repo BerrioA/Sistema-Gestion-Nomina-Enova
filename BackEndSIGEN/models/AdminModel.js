@@ -20,6 +20,7 @@ const Administradores = db.define(
       validate: {
         notEmpty: true,
         len: [3, 100],
+        is: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       },
     },
     apellido: {
@@ -28,14 +29,30 @@ const Administradores = db.define(
       validate: {
         notEmpty: true,
         len: [3, 100],
+        is: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       },
     },
     correo: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: {
+        msg: "Este correo ya está en uso", 
+      },
       validate: {
-        notEmpty: true,
-        isEmail: true,
+        notEmpty: {
+          msg: "El correo no puede estar vacío",
+        },
+        isEmail: {
+          msg: "El formato del correo no es válido",
+        },
+        len: {
+          args: [11, 100],
+          msg: "El correo debe tener entre 11 y 100 caracteres",
+        },
+        is: {
+          args: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+          msg: "El formato del correo es inválido",
+        },
       },
     },
     password: {
@@ -47,11 +64,10 @@ const Administradores = db.define(
       },
     },
     rol: {
-      type: DataTypes.ENUM,
-      values: ["Administrador", "Coordinador", "Developer"],
+      type: DataTypes.STRING,
       allowNull: true,
       validate: {
-        notEmpty: true,
+        notEmpty: false,
       },
     },
   },

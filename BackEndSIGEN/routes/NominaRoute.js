@@ -17,11 +17,12 @@ import {
   administradorOnly,
   verifyAdministrador,
 } from "../middleware/AutenticacionAdministrador.js";
+import { verifyTypeUser } from "../middleware/VerifyTypeUser.js";
 
 const router = express.Router();
 
 // Administradores y coordinadores pueden ver las nóminas
-router.get("/nominas", getNominas);
+router.get("/nominas", verifyTypeUser, getNominas);
 router.get(
   "/nominas/:id",
   verifyCoordinador,

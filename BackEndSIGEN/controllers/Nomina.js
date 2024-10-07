@@ -1,36 +1,108 @@
 import Nomina from "../models/NominaModel.js";
-import Empleado from "../models/EmpleadoModel.js"; // Asegúrate que este modelo esté correctamente configurado
+import Empleado from "../models/EmpleadoModel.js";
+import Coordinadores from "../models/CoordinadorModel.js";
 
 //Función para mostrar todas las nóminas
 export const getNominas = async (req, res) => {
   try {
-    const response = await Nomina.findAll({
-      attributes: [
-        "uuid",
-        "honoquincena",
-        "honodia",
-        "totaldiasliquidar",
-        "clasesapoyosena",
-        "diasdominical",
-        "clasesintructores",
-        "totalinscripcionesliquidar",
-        "honoperiodoliquidacion",
-        "valortotaldominicales",
-        "valortotalclasesinstructores",
-        "comicioninscripcionestudiante",
-        "totalpagar",
-        "pagosadicionalespendientes",
-        "saldopendiente",
-        "observaciones",
-        "empleadoId",
-      ],
-      include: [
-        {
-          model: Empleado,
-          attributes: ["nombre", "apellido"], // Si necesitas los datos del empleado
+    let response;
+    if (req.rol === "Administrador") {
+      response = await Nomina.findAll({
+        attributes: [
+          "uuid",
+          "honoquincena",
+          "honodia",
+          "totaldiasliquidar",
+          "clasesapoyosena",
+          "valorclaseapoyosena",
+          "diasdominicales",
+          "valordiadominical",
+          "clasesintructor",
+          "valorclaseinstructor",
+          "totalinscripcionesliquidar",
+          "valortotalclasesinstructor",
+          "valortotalclasesapoyosena",
+          "valorcomisioninscripcion",
+          "honoperiodoliquidacion",
+          "valortotaldominicales",
+          "valortotalclasesinstructor",
+          "comicioninscripcionestudiante",
+          "totalpagar",
+          "pagosadicionalespendientes",
+          "deducciones",
+          "saldopendiente",
+          "observaciones",
+          "empleadoId",
+        ],
+        include: [
+          {
+            model: Empleado,
+            attributes: [
+              "nombre",
+              "apellido",
+              "cc",
+              "banco",
+              "numcuenta",
+              "honomensual",
+              "sede",
+              "cargo",
+            ],
+          },
+          {
+            model: Coordinadores,
+            attributes: ["nombre", "correo"],
+          },
+        ],
+      });
+    } else if (req.rol === "Coordinador") {
+      response = await Nomina.findAll({
+        attributes: [
+          "uuid",
+          "honoquincena",
+          "honodia",
+          "totaldiasliquidar",
+          "clasesapoyosena",
+          "valorclaseapoyosena",
+          "diasdominicales",
+          "valordiadominical",
+          "clasesintructor",
+          "valorclaseinstructor",
+          "totalinscripcionesliquidar",
+          "valortotalclasesapoyosena",
+          "valorcomisioninscripcion",
+          "honoperiodoliquidacion",
+          "valortotaldominicales",
+          "valortotalclasesinstructor",
+          "comicioninscripcionestudiante",
+          "totalpagar",
+          "pagosadicionalespendientes",
+          "deducciones",
+          "saldopendiente",
+          "observaciones",
+          "empleadoId",
+        ],
+        where: {
+          coordinadorId: req.coordinadorId,
         },
-      ],
-    });
+        include: [
+          {
+            model: Empleado,
+            attributes: [
+              "nombre",
+              "apellido",
+              "cc",
+              "banco",
+              "numcuenta",
+              "honomensual",
+              "sede",
+              "cargo",
+            ],
+          },
+        ],
+      });
+    } else {
+      return res.status(403).json({ msg: "Acceso denegado." });
+    }
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -47,15 +119,21 @@ export const getNominaById = async (req, res) => {
         "honodia",
         "totaldiasliquidar",
         "clasesapoyosena",
-        "diasdominical",
-        "clasesintructores",
+        "valorclaseapoyosena",
+        "diasdominicales",
+        "valordiadominical",
+        "clasesintructor",
+        "valorclaseinstructor",
+        "valortotalclasesapoyosena",
         "totalinscripcionesliquidar",
+        "valorcomisioninscripcion",
         "honoperiodoliquidacion",
         "valortotaldominicales",
-        "valortotalclasesinstructores",
+        "valortotalclasesinstructor",
         "comicioninscripcionestudiante",
         "totalpagar",
         "pagosadicionalespendientes",
+        "deducciones",
         "saldopendiente",
         "observaciones",
         "empleadoId",
@@ -79,18 +157,25 @@ export const createNomina = async (req, res) => {
     honodia,
     totaldiasliquidar,
     clasesapoyosena,
-    diasdominical,
-    clasesintructores,
+    valorclaseapoyosena,
+    diasdominicales,
+    valordiadominical,
+    clasesintructor,
+    valorclaseinstructor,
     totalinscripcionesliquidar,
+    valorcomisioninscripcion,
+    valortotalclasesapoyosena,
     honoperiodoliquidacion,
     valortotaldominicales,
-    valortotalclasesinstructores,
+    valortotalclasesinstructor,
     comicioninscripcionestudiante,
     totalpagar,
     pagosadicionalespendientes,
+    deducciones,
     saldopendiente,
     observaciones,
-    empleadoId
+    empleadoId,
+    sede: sede,
   } = req.body;
 
   try {
@@ -101,24 +186,31 @@ export const createNomina = async (req, res) => {
       return res.status(404).json({ msg: "El empleado no existe." });
     }
 
-    // Crear la nómina solo si el empleado existe
     await Nomina.create({
       honoquincena,
       honodia,
       totaldiasliquidar,
       clasesapoyosena,
-      diasdominical,
-      clasesintructores,
+      valorclaseapoyosena,
+      diasdominicales,
+      valordiadominical,
+      clasesintructor,
+      valorclaseinstructor,
       totalinscripcionesliquidar,
+      valorcomisioninscripcion,
+      valortotalclasesapoyosena,
       honoperiodoliquidacion,
       valortotaldominicales,
-      valortotalclasesinstructores,
+      valortotalclasesinstructor,
       comicioninscripcionestudiante,
       totalpagar,
       pagosadicionalespendientes,
+      deducciones,
       saldopendiente,
       observaciones,
       empleadoId,
+      coordinadorId: req.coordinadorId,
+      sede: sede,
     });
 
     res.status(201).json({ msg: "¡Nómina registrada con éxito!" });
@@ -126,7 +218,6 @@ export const createNomina = async (req, res) => {
     res.status(400).json({ msg: error.message });
   }
 };
-
 
 //Función para actualizar una nómina
 export const updateNomina = async (req, res) => {
@@ -145,15 +236,21 @@ export const updateNomina = async (req, res) => {
     honodia,
     totaldiasliquidar,
     clasesapoyosena,
-    diasdominical,
-    clasesintructores,
+    valorclaseapoyosena,
+    diasdominicales,
+    valordiadominical,
+    clasesintructor,
+    valorclaseinstructor,
     totalinscripcionesliquidar,
+    valorcomisioninscripcion,
+    valortotalclasesapoyosena,
     honoperiodoliquidacion,
     valortotaldominicales,
-    valortotalclasesinstructores,
+    valortotalclasesinstructor,
     comicioninscripcionestudiante,
     totalpagar,
     pagosadicionalespendientes,
+    deducciones,
     saldopendiente,
     observaciones,
     empleadoId,
@@ -166,15 +263,21 @@ export const updateNomina = async (req, res) => {
         honodia,
         totaldiasliquidar,
         clasesapoyosena,
-        diasdominical,
-        clasesintructores,
+        valorclaseapoyosena,
+        diasdominicales,
+        valordiadominical,
+        clasesintructor,
+        valorclaseinstructor,
         totalinscripcionesliquidar,
+        valorcomisioninscripcion,
+        valortotalclasesapoyosena,
         honoperiodoliquidacion,
         valortotaldominicales,
-        valortotalclasesinstructores,
+        valortotalclasesinstructor,
         comicioninscripcionestudiante,
         totalpagar,
         pagosadicionalespendientes,
+        deducciones,
         saldopendiente,
         observaciones,
         empleadoId,

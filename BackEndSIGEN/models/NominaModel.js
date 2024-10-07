@@ -1,6 +1,7 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
-import Empleados from "./EmpleadoModel.js"; // Importa el modelo de Empleados
+import Empleados from "./EmpleadoModel.js";
+import Coordinadores from "./CoordinadorModel.js";
 
 const { DataTypes } = Sequelize;
 
@@ -16,121 +17,225 @@ const Nomina = db.define(
       },
     },
     honoquincena: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     honodia: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     totaldiasliquidar: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
+        isInt: true,
+        min: 0,
+        max: 15,
       },
     },
     clasesapoyosena: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
+        isInt: true,
+        min: 0,
+        max: 60,
       },
     },
-    diasdominical: {
-      type: DataTypes.STRING,
+    valorclaseapoyosena: {
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
-    clasesintructores: {
-      type: DataTypes.STRING,
+    diasdominicales: {
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
+        isInt: true,
+        min: 0,
+        max: 20,
+      },
+    },
+    valordiadominical: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isDecimal: true,
+        min: 0,
+      },
+    },
+    clasesintructor: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isInt: true,
+        min: 0,
+        max: 60,
+      },
+    },
+    valorclaseinstructor: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     totalinscripcionesliquidar: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
+        isInt: true,
+        min: 0,
+        max: 60,
+      },
+    },
+    valorcomisioninscripcion: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     honoperiodoliquidacion: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
-        isNumeric: true,
+        isDecimal: true,
+        min: 0,
+      },
+    },
+    valortotalclasesapoyosena: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     valortotaldominicales: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
-    valortotalclasesinstructores: {
-      type: DataTypes.STRING,
+    valortotalclasesinstructor: {
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     comicioninscripcionestudiante: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     totalpagar: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     pagosadicionalespendientes: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: true,
+        min: 0,
+      },
+    },
+    deducciones: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+      validate: {
+        notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     saldopendiente: {
-      type: DataTypes.STRING,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     observaciones: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: false,
-      },
+      type: DataTypes.TEXT,
+      allowNull: true,
     },
     empleadoId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: false,
       },
+    },
+    coordinadorId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isDecimal: false,
+      },
+    },
+    sede: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {
     freezeTableName: true,
+    hooks: {
+      async beforeCreate(nomina) {
+        const coordinador = await Coordinadores.findByPk(nomina.coordinadorId);
+        if (coordinador) {
+          nomina.sede = coordinador.sede;
+        }
+      },
+    },
   }
 );
 
@@ -138,5 +243,8 @@ const Nomina = db.define(
 Empleados.hasMany(Nomina, { foreignKey: "empleadoId" });
 Nomina.belongsTo(Empleados, { foreignKey: "empleadoId" });
 
+// Relación de Coordinadores con las nómimas
+Coordinadores.hasMany(Nomina, { foreignKey: "coordinadorId" });
+Nomina.belongsTo(Coordinadores, { foreignKey: "coordinadorId" });
 
 export default Nomina;

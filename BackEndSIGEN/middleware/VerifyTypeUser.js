@@ -8,11 +8,10 @@ export const verifyTypeUser = async (req, res, next) => {
     }
 
     let usuario;
+    // Si hay un ID de administrador en la sesión
     if (req.session.administradorId) {
       usuario = await Administrador.findOne({
-        where: {
-          uuid: req.session.administradorId,
-        },
+        where: { uuid: req.session.administradorId },
       });
       if (!usuario) {
         return res
@@ -21,13 +20,13 @@ export const verifyTypeUser = async (req, res, next) => {
       }
       req.administradorId = usuario.id; // Guarda el id del administrador
       req.rol = usuario.rol; // Guarda el rol del administrador
+      return next(); // Termina la verificación aquí para no seguir buscando
     }
 
+    // Si hay un ID de coordinador en la sesión
     if (req.session.coordinadorId) {
       usuario = await Coordinador.findOne({
-        where: {
-          uuid: req.session.coordinadorId,
-        },
+        where: { uuid: req.session.coordinadorId },
       });
       if (!usuario) {
         return res
@@ -36,9 +35,11 @@ export const verifyTypeUser = async (req, res, next) => {
       }
       req.coordinadorId = usuario.id; // Guarda el id del coordinador
       req.rol = usuario.rol; // Guarda el rol del coordinador
+      return next(); // Termina la verificación aquí
     }
 
-    next();
+    // Si no se cumplen las condiciones, responde con un error
+    return res.status(401).json({ msg: "¡Inicie sesión en su cuenta!" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ msg: "Error en el servidor." });

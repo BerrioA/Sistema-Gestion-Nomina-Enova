@@ -17,16 +17,14 @@ const Empleados = db.define(
     },
     sede: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
+      allowNull: true,
     },
     cargo: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: [3, 50],
       },
     },
     nombre: {
@@ -35,6 +33,7 @@ const Empleados = db.define(
       validate: {
         notEmpty: true,
         len: [3, 100],
+        is: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       },
     },
     apellido: {
@@ -43,13 +42,16 @@ const Empleados = db.define(
       validate: {
         notEmpty: true,
         len: [3, 100],
+        is: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       },
     },
-    nit: {
-      type: DataTypes.STRING,
+    cc: {
+      type: DataTypes.BIGINT,
       allowNull: false,
       validate: {
         notEmpty: true,
+        isInt: true,
+        min: 10000,
       },
     },
     banco: {
@@ -57,6 +59,7 @@ const Empleados = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: [3, 50],
       },
     },
     numcuenta: {
@@ -65,14 +68,16 @@ const Empleados = db.define(
       validate: {
         notEmpty: true,
         len: [10, 20],
+        is: /^[0-9+]+$/,
       },
     },
     honomensual: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
-        isNumeric: true,
+        isDecimal: true,
+        min: 0,
       },
     },
     coordinadorId: {
@@ -80,6 +85,7 @@ const Empleados = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
+        isDecimal: false,
       },
     },
   },
@@ -91,14 +97,13 @@ const Empleados = db.define(
           empleado.coordinadorId
         );
         if (coordinador) {
-          empleado.sede = coordinador.sede; // Asigna la sede del coordinador al empleado
+          empleado.sede = coordinador.sede;
         }
       },
     },
   }
 );
 
-// Definición explícita del nombre de la clave foránea
 Coordinadores.hasMany(Empleados, {
   foreignKey: "coordinadorId",
   onDelete: "CASCADE",

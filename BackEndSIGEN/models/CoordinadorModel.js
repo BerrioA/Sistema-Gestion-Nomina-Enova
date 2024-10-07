@@ -21,6 +21,7 @@ const Coordinadores = db.define(
       validate: {
         notEmpty: true,
         len: [3, 100],
+        is: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       },
     },
     apellido: {
@@ -29,6 +30,7 @@ const Coordinadores = db.define(
       validate: {
         notEmpty: true,
         len: [3, 100],
+        is: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
       },
     },
     correo: {
@@ -37,6 +39,8 @@ const Coordinadores = db.define(
       validate: {
         notEmpty: true,
         isEmail: true,
+        len: [11, 100],
+        is: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
       },
     },
     password: {
@@ -44,6 +48,7 @@ const Coordinadores = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: [8, 100],
       },
     },
     sede: {
@@ -51,13 +56,14 @@ const Coordinadores = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: [3, 100],
       },
     },
     rol: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       validate: {
-        notEmpty: true,
+        notEmpty: false,
       },
     },
     cargo: {
@@ -65,6 +71,7 @@ const Coordinadores = db.define(
       allowNull: false,
       validate: {
         notEmpty: true,
+        len: [3, 50],
       },
     },
   },

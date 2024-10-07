@@ -16,7 +16,7 @@ export const getEmpleados = async (req, res) => {
           "cargo",
           "nombre",
           "apellido",
-          "nit",
+          "cc",
           "banco",
           "numcuenta",
           "honomensual",
@@ -38,7 +38,7 @@ export const getEmpleados = async (req, res) => {
           "cargo",
           "nombre",
           "apellido",
-          "nit",
+          "cc",
           "banco",
           "numcuenta",
           "honomensual",
@@ -56,7 +56,6 @@ export const getEmpleados = async (req, res) => {
     } else {
       return res.status(403).json({ msg: "Acceso denegado." });
     }
-
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({ msg: error.message });
@@ -89,7 +88,7 @@ export const getEmpleadoById = async (req, res) => {
           "cargo",
           "nombre",
           "apellido",
-          "nit",
+          "cc",
           "banco",
           "numcuenta",
           "honomensual",
@@ -114,7 +113,7 @@ export const getEmpleadoById = async (req, res) => {
           "cargo",
           "nombre",
           "apellido",
-          "nit",
+          "cc",
           "banco",
           "numcuenta",
           "honomensual",
@@ -139,9 +138,8 @@ export const getEmpleadoById = async (req, res) => {
   }
 };
 
-
 export const createEmpleado = async (req, res) => {
-  const { sede, cargo, nombre, apellido, nit, banco, numcuenta, honomensual } =
+  const { sede, cargo, nombre, apellido, cc, banco, numcuenta, honomensual } =
     req.body;
   try {
     await Empleado.create({
@@ -149,7 +147,7 @@ export const createEmpleado = async (req, res) => {
       cargo: cargo,
       nombre: nombre,
       apellido: apellido,
-      nit: nit,
+      cc: cc,
       banco: banco,
       numcuenta: numcuenta,
       honomensual: honomensual,
@@ -172,16 +170,8 @@ export const updateEmpleado = async (req, res) => {
       return res
         .status(404)
         .json({ msg: "Datos del empleados no encontrados." });
-    const {
-      sede,
-      cargo,
-      nombre,
-      apellido,
-      nit,
-      banco,
-      numcuenta,
-      honomensual,
-    } = req.body;
+    const { sede, cargo, nombre, apellido, cc, banco, numcuenta, honomensual } =
+      req.body;
     if (req.role === "Administrador") {
       await Empleado.update(
         {
@@ -189,7 +179,7 @@ export const updateEmpleado = async (req, res) => {
           cargo,
           nombre,
           apellido,
-          nit,
+          cc,
           banco,
           numcuenta,
           honomensual,
@@ -209,7 +199,7 @@ export const updateEmpleado = async (req, res) => {
           cargo,
           nombre,
           apellido,
-          nit,
+          cc,
           banco,
           numcuenta,
           honomensual,
@@ -238,16 +228,8 @@ export const deleteEmpleado = async (req, res) => {
       },
     });
     if (!empleado) return res.status(404).json({ msg: "Datos no encontrados" });
-    const {
-      sede,
-      cargo,
-      nombre,
-      apellido,
-      nit,
-      banco,
-      numcuenta,
-      honomensual,
-    } = req.body;
+    const { sede, cargo, nombre, apellido, cc, banco, numcuenta, honomensual } =
+      req.body;
     if (req.rol === "Coordinador") {
       await Empleado.destroy({
         where: {
