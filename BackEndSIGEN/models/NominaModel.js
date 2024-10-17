@@ -2,6 +2,7 @@ import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
 import Empleados from "./EmpleadoModel.js";
 import Coordinadores from "./CoordinadorModel.js";
+import moment from "moment";
 
 const { DataTypes } = Sequelize;
 
@@ -230,6 +231,35 @@ const Nomina = db.define(
     freezeTableName: true,
     hooks: {
       async beforeCreate(nomina) {
+        // Validar fechas permitidas
+        const diasPermitidos = [1, 2, 3, 15, 16, 17];
+        const diaActual = moment().date();
+        if (!diasPermitidos.includes(diaActual)) {
+          throw new Error(
+            "La nómina solo puede ser creada los días 1, 2, 3, 15, 16, 17 del mes."
+          );
+        }
+
+        // Verificar si ya existe una nómina para el empleado en el mismo mes
+        const inicioMes = moment().startOf("month").toDate();
+        const finMes = moment().endOf("month").toDate();
+
+        const nominaExistente = await Nomina.findOne({
+          where: {
+            empleadoId: nomina.empleadoId,
+            createdAt: {
+              [Op.between]: [inicioMes, finMes],
+            },
+          },
+        });
+
+        if (nominaExistente) {
+          throw new Error(
+            "Ya existe una nómina para este empleado en este mes."
+          );
+        }
+
+        // Asignar sede automáticamente basado en el coordinador
         const coordinador = await Coordinadores.findByPk(nomina.coordinadorId);
         if (coordinador) {
           nomina.sede = coordinador.sede;
@@ -239,12 +269,16 @@ const Nomina = db.define(
   }
 );
 
-// Relación de Nomina con Empleados
-Empleados.hasMany(Nomina, { foreignKey: "empleadoId" });
+Empleados.hasMany(Nomina, {
+  foreignKey: "empleadoId",
+  onDelete: "CASCADE",
+});
 Nomina.belongsTo(Empleados, { foreignKey: "empleadoId" });
 
-// Relación de Coordinadores con las nómimas
-Coordinadores.hasMany(Nomina, { foreignKey: "coordinadorId" });
+Coordinadores.hasMany(Nomina, {
+  foreignKey: "coordinadorId",
+  onDelete: "CASCADE",
+});
 Nomina.belongsTo(Coordinadores, { foreignKey: "coordinadorId" });
 
 export default Nomina;

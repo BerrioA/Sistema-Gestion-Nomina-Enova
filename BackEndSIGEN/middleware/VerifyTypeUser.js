@@ -8,7 +8,6 @@ export const verifyTypeUser = async (req, res, next) => {
     }
 
     let usuario;
-    // Si hay un ID de administrador en la sesión
     if (req.session.administradorId) {
       usuario = await Administrador.findOne({
         where: { uuid: req.session.administradorId },

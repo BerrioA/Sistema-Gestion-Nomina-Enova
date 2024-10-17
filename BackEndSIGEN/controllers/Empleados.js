@@ -243,7 +243,7 @@ export const deleteEmpleado = async (req, res) => {
         });
       await Empleado.destroy({
         where: {
-          [Op.and]: [{ id: empleado.id }, { empleadoId: req.coordinadorIdId }],
+          [Op.and]: [{ id: empleado.id }, { empleadoId: req.coordinadorId }],
         },
       });
     }

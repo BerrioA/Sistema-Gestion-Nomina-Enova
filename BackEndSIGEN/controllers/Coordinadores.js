@@ -49,21 +49,17 @@ export const createCoordinador = async (req, res) => {
   const { nombre, apellido, correo, cargo, sede, password, confPassword, rol } =
     req.body;
 
-  // Verificación de contraseña
   if (password === "" || password === null) {
     return res.status(404).json({
       msg: "No ha ingresado una contraseña, por favor verifique y vuelva a intentar.",
     });
   }
-
   if (password !== confPassword) {
     return res.status(400).json({
       msg: "Las contraseñas no coinciden, por favor verifique y vuelva a intentar.",
     });
   }
-
   const hashPassword = await argon2.hash(password); // Hash de la contraseña
-
   try {
     // Crear el coordinador con el id del administrador
     await Coordinador.create({
