@@ -1,0 +1,12 @@
+Crear un administrador
+POST http://localhost:5000/administradores
+Content-Type: application/json
+
+
+{
+    "name": "Digna J",
+    "email": "Digna@developer.com",
+    "password": "Danda1214",
+    "confPassword": "Danda1214",
+    "role": "Administrador"
+}
