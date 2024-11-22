@@ -51,7 +51,7 @@ app.use(
 app.use(
   cors({
     //Dominios con accedo a la API
-    origin: ["http://localhost:5173", "https://sigen-nomina.vercel.app/"],
+    origin: ["http://localhost:5173", "https://sigen-nomina.vercel.app"],
     credentials: true,
     httpOnly: true, // Evita acceso desde JavaScript en el navegador
   sameSite: "lax",
